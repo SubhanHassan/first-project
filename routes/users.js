@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+const { UsersController } = require('../Controllers');
 
 /* GET users listing. */
 const users =[
@@ -45,13 +46,26 @@ router.get('/', function(req, res, next) {
     data:users
 });
 });
-router.post('/',function(req,res,next){
+router.post('/', async function(req,res,next){
   const data = req.body;
-  users.push(data);
-  res.send({
-    message:'Successfully saved users',
-    data:users
+  try{
+    UsersController.addUser(data);
+    res.send({
+      message:'Successfully saved users',
+      data:users
+  });
+  }catch(error){
+    res.status(200).send({
+      message:'Successfully saved users',
+      data:users
+
+  });
+  
+  res.status(500).send({
+    message:'Something Went Wrong',
+    data:error
 });
+  }
 });
 router.put('/:id',function(req,res,next){
   const id = req.params.id;
