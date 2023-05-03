@@ -49,15 +49,15 @@ router.get('/', function(req, res, next) {
 router.post('/', async function(req,res,next){
   const data = req.body;
   try{
-    UsersController.addUser(data);
-    res.send({
+   const user = await UsersController.addUser(data);
+    return res.send({
       message:'Successfully saved users',
-      data:users
+      data:user
   });
   }catch(error){
     res.status(200).send({
       message:'Successfully saved users',
-      data:users
+      data:user
 
   });
   

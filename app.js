@@ -17,7 +17,7 @@ async function connectDB () {
       console.log(error);
     }
 }
-
+connectDB();
 
 var app = express();
 
