@@ -41,19 +41,45 @@ const { UsersController } = require('../Controllers');
 // ];
 /* GET Users Listing. */
 router.get('/', async function(req, res, next) {
-  const filter = req.query;
+   const filter = req.query;
   try {
     const results = await UsersController.getAllUsers(filter);
     return res.status(200).send({
-      message: 'Successfully fetched users',
+      message:"Successfully Fetched Users",
       data: results
+
     });
   } catch (error) {
+    console.log(error)
     res.status(500).send({
-      message: 'Something went wrong',
-      data: error
+      message:' Something WENT WRONG',
+      data:error
     });
+    
   }
+  
+  
+});
+// Get Single User
+router.get('/:id', async function(req, res, next) {
+  const id = req.params.id;
+ try {
+   const results = await UsersController.getUserById(id);
+   return res.status(200).send({
+     message:"Successfully Fetched Users",
+     data: results
+
+   });
+ } catch (error) {
+   console.log(error)
+   res.status(500).send({
+     message:' Something WENT WRONG',
+     data:error
+   });
+   
+ }
+ 
+ 
 });
 
   /* Add Users . */  
@@ -74,7 +100,40 @@ router.post('/', async function(req,res,next){
   }
 });
 
-
+// Login User
+router.post('/login', async (req,res,next) => { 
+  const {username, password} = req.body;
+  if(!username){
+    return res.status(400).send({
+      message: 'Username Required',
+      data :null
+    })
+  }
+  if(!password){
+    return res.status(400).send({
+      message: 'password Required',
+      data: null
+    });
+  }
+  try{
+    const user = await UsersController.verifyUser({username, password});
+    if(!user){
+      return res.status(401).send({
+        message: 'Invalid Credentials',
+        data :null
+      });
+    }
+    res.status(200).send({
+      message: 'Successfully login user',
+      data: user
+    });
+  } catch (error) {
+    res.status(500).send({
+      message: 'Something went wrong',
+      data: error
+    });
+  }
+});
 
 
 
@@ -84,7 +143,7 @@ router.put('/:id',async function(req,res,next){
   const id = req.params.id;
   const data = req.body;
   try {
-    const result = await UsersController.updateUsers(id,data);
+    const result = await UsersController.updateUser(id,data);
     res.status(200).send({
       message:'Successfully festch users',
       data:result
@@ -98,13 +157,24 @@ router.put('/:id',async function(req,res,next){
     });
 }
 });
-router.delete('/:id',function(req,res,next){
-   const id =req.params.id;
-   users.splice(id,1);
-  res.send({
-    message:'Successfully delete users',
-    data:users
-});
+router.delete('/:id',async function(req,res,next) {
+   const id = req.params.id;
+   const data = req.body;
+   try {
+    const result = await UsersController.deleteUser(id,data);
+    res.status(200).send({
+      message:'Successfully delete user',
+      data:result
+  });
+
+}catch (error) {
+    res.status(500).send({
+      message:'Something went wrong',
+      data:error
+    
+    });
+}
+ 
 });
 
 module.exports = router;

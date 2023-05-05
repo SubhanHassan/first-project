@@ -15,7 +15,7 @@ const usersSchema = new mongoose.Schema({
 
 },{
     timestamps:true,
-    collation:'users',
+    collection:'users',
     versionKey: false
 });
 module.exports = mongoose.model('users', usersSchema);
